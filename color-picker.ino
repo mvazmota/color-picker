@@ -1,49 +1,82 @@
-int btnPin = 6;
-int bluePin = 3;
-int greenPin = 4;
-int redPin = 5;
-int ldrPin = 0;
+// Readings for White
+int wR=800;
+int wG=735;
+int wB=715;
+ 
+// Readings for Black
+int bR=275;
+int bG=266;
+int bB=275;
 
 void setup() {
   Serial.begin(9600);
-  pinMode(btnPin, INPUT_PULLUP);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(6, INPUT_PULLUP);
 }
 
 void loop() {
-  int value=digitalRead(btnPin);
+    int R, G, B;
   
-  if (value == 0) {
-    digitalWrite(redPin, HIGH);
-    Serial.print("The red is: ");
-    Serial.println(analogRead(ldrPin));
-    int red = map(analogRead(ldrPin),0,97,0,255);
-    Serial.print("The MAP red is: ");
-    Serial.println(red);
-    delay(1000);
-    digitalWrite(redPin, LOW);
+    int value=digitalRead(6);
+    //Quando o botão está pressionado
+
+    //Serial.println(analogRead(0));delay(100);// leitura contínua do LDR
     
-    digitalWrite(greenPin, HIGH);
-    Serial.print("The green is: ");
-    Serial.println(analogRead(ldrPin));
-    //int green = map(analogRead(ldrPin),0,97,0,255);
-    //Serial.print("The MAP green is: ");
-    //Serial.println(green);
-    delay(1000);
-    digitalWrite(greenPin, LOW);
+    if(value == 0)  {
+      
+    //Liga a LED RGB com Vermelho
+    digitalWrite(5, HIGH);
+    digitalWrite(4, LOW);
+    digitalWrite(3, LOW);
+    delay(100);
+    R = analogRead(0);
+
+    //Liga a LED RGB com Verde
+    digitalWrite(4, HIGH);
+    digitalWrite(5, LOW);
+    digitalWrite(3, LOW);
+    delay(100);
+    G = analogRead(0);
+
+    //Liga a LED RGB com Azul
+    digitalWrite(3, HIGH);
+    digitalWrite(5, LOW);
+    digitalWrite(4, LOW);
+    delay(100);
+    B = analogRead(0);
+
+    digitalWrite(5, LOW);
+     digitalWrite(4, LOW);
+    digitalWrite(3, LOW);
+
+        // normalizar
+        /*
+    Serial.print("Vermelho:");
+    Serial.println(R);
+    Serial.print("Verde:");
+    Serial.println(G);
+    Serial.print("Azul:");
+    Serial.println(B );  
+*/
+   R=map(R, bR, wR, 0, 255);
+   G=map(G, bG, wG, 0, 255);
+   B=map(B, bB, wB, 0, 255);
     
-    digitalWrite(bluePin, HIGH);
-    Serial.print("The blue is: ");
-    Serial.println(analogRead(ldrPin));
-    //int blue = map(analogRead(ldrPin),0,97,0,255);
-    //Serial.print("The MAP blue is: ");
-    //Serial.println(blue);
-    delay(1000);
-    digitalWrite(bluePin, LOW);
-  }
+   if( R < 0) R = 0;
+   if( G < 0) G = 0;
+   if( B < 0) B = 0;
+   if( R > 255 ) R = 255;
+   if( G > 255 ) G = 255;
+   if( B > 255 ) B = 255;
+
+    Serial.print("Vermelho:");
+    Serial.println(R);
+    Serial.print("Verde:");
+    Serial.println(G);
+    Serial.print("Azul:");
+    Serial.println(B );
+    }
+    
 }
-
-
-
